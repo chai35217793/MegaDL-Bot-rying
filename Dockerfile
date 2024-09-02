@@ -1,14 +1,17 @@
 FROM debian:latest
 
+# Update and install necessary packages
 RUN apt update && apt upgrade -y
-RUN apt install git python3-pip ffmpeg -y
+RUN apt install git python3-pip python3-venv ffmpeg -y
 
-RUN cd /
-RUN git clone https://github.com/AsmSafone/MegaDL-Bot
-RUN cd MegaDL-Bot
+# Clone the repository
+RUN git clone https://github.com/AsmSafone/MegaDL-Bot /MegaDL-Bot
 WORKDIR /MegaDL-Bot
 
-RUN pip3 install --upgrade pip
-RUN pip3 install -U -r requirements.txt
+# Set up and use a virtual environment
+RUN python3 -m venv venv
+RUN . venv/bin/activate && pip install --upgrade pip
+RUN . venv/bin/activate && pip install -U -r requirements.txt
 
-CMD python3 main.py
+# Run the application
+CMD ["venv/bin/python3", "main.py"]
